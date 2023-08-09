@@ -1,6 +1,6 @@
 const Thought = require('../models/Thought')
 const User = require('../models/User')
-const { Op, EmptyResultError } = require('sequelize')
+const { Op } = require('sequelize')
 
 module.exports = class ThoughtController{
     static async dashboard(req, res){
@@ -45,11 +45,21 @@ module.exports = class ThoughtController{
         console.log(order)
 
         Thought.findAll({
-            include: Users,
+            include: User,
             where: {
                 title: {[Op.like]:`%${search}%`},
             },
             order: [['createdAt', order]]
-        })
+        }).then((data) => {
+            let thoughtsQty = data.length
+
+            if(thoughtsQty === 0){
+                thoughtsQty = false
+            }
+
+            const thoughts = data.map((result) => result.get({plain: true}))
+
+            res.render('thoughts/home', {thoughts, thoughtsQty, search})
+        }).catch((err) => console.error(err))
     }
 }

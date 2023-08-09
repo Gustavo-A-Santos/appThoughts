@@ -9,10 +9,12 @@ const app = express();
 const conn = require("./db/conn");
 
 // Models
-const thought = require("./models/Thought");
+const Thought = require("./models/Thought");
 
 // routes
 const authRoutes = require("./routes/authRoutes");
+const thoughtsRoute = require("./routes/thoughtsRoutes");
+const ThoughtController = require("./controllers/ThoughtController");
 
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
@@ -63,6 +65,8 @@ app.use((req, res, next) => {
 });
 
 app.use("/", authRoutes);
+app.use("/thoughts", thoughtsRoute);
+app.get("/", ThoughtController.showThoughts)
 
 conn
   .sync()
