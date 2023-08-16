@@ -13,7 +13,7 @@ module.exports = class ThoughtController{
             plain: true,
         })
 
-        const thoughts = user.Thought.map((result) => result.dataValues)
+        const thoughts = user.Thoughts.map((result) => result.dataValues)
 
         let emptyThoughts = true
 
@@ -118,7 +118,7 @@ module.exports = class ThoughtController{
         .then((thought) => {
             req.flash('message', 'Pensamento alterado com sucesso!')
             req.session.save(() => {
-                res.render('thought/dashboard')
+                res.render('thoughts/dashboard')
             })
         })
         .catch((err) => console.error(err))
